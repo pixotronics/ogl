@@ -1,6 +1,6 @@
 {
     "name": "ogl",
-    "version": "0.0.68",
+    "version": "0.1.66",
     "description": "WebGL Library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
         "build": "webpack --config webpack.dev.js",
         "watch": "webpack --config webpack.dev.js --watch",
         "prepare": "npm run build",
-        "publish-git": "publish-to-git"
+        "publish-git": "npm install && publish-to-git"
     },
     "repository": {
         "type": "git",
