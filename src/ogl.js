@@ -29,7 +29,6 @@ export { Orbit } from './extras/Orbit.js';
 export { Raycast } from './extras/Raycast.js';
 export { Curve } from './extras/Curve.js';
 export { Post } from './extras/Post.js';
-export { CustomPost, Pass, RenderPass } from './extras/CustomPost.js';
 export { Skin } from './extras/Skin.js';
 export { Animation } from './extras/Animation.js';
 export { Text } from './extras/Text.js';

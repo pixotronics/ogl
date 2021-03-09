@@ -1576,7 +1576,7 @@ export class Renderer {
     render({ scene, camera, target, update, sort, frustumCull, clear, }: Partial<{
         scene: Transform;
         camera: Camera;
-        target: RenderTarget;
+        target: RenderTarget|null;
         update: boolean;
         sort: boolean;
         frustumCull: boolean;
@@ -2126,7 +2126,8 @@ export class Post {
         width?: number;
         height?: number;
     };
-    passes: Pass[];
+    // passes: Pass[];
+    // addPass(pass: Pass): Pass;
     geometry: Triangle;
     uniform: {
         value: any;
@@ -2137,29 +2138,21 @@ export class Post {
     width: number;
     height: number;
     constructor(gl: OGLRenderingContext, { width, height, dpr, wrapS, wrapT, minFilter, magFilter, geometry, targetOnly, }?: Partial<PostOptions>);
-    addPass(pass: Pass): Pass;
     resize({ width, height, dpr }?: Partial<{
         width: number;
         height: number;
         dpr: number;
     }>): void;
     render({ scene, camera, target, update, sort, frustumCull }: {
-        scene: any;
-        camera: any;
-        target?: any;
+        scene?: Transform;
+        camera?: Camera;
+        target?: RenderTarget;
         update?: boolean;
         sort?: boolean;
         frustumCull?: boolean;
     }): void;
 }
 // // #endregion
-export class Pass{
-    public enabled:boolean;
-    public renderToScreen: boolean;
-    public needsSwap:boolean;
-    render(renderer: Renderer, writeBuffer: RenderTarget, readBuffer: RenderTarget): void;
-}
-export class CustomPost extends Post {}
 
 // #region Rayscast
 export class Raycast {
