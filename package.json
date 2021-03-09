@@ -1,6 +1,6 @@
 {
     "name": "ogl",
-    "version": "0.0.65",
+    "version": "0.0.68-alpha.0",
     "description": "WebGL Library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "scripts": {
         "build": "webpack --config webpack.dev.js",
         "watch": "webpack --config webpack.dev.js --watch",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "publish-git": "publish-to-git"
     },
     "repository": {
         "type": "git",
@@ -35,6 +36,7 @@
         "@rollup/plugin-typescript": "^8.2.0",
         "copy-webpack-plugin": "^8.0.0",
         "dts-bundle-webpack": "^1.0.2",
+        "publish-to-git": "^1.1.9",
         "raw-loader": "^4.0.2",
         "source-map-loader": "^2.0.1",
         "ts-loader": "^8.0.17",
