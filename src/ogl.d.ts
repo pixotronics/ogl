@@ -1285,6 +1285,7 @@ export class Camera extends Transform {
     updateFrustum(): void;
     frustumIntersectsMesh(node: any): boolean;
     frustumIntersectsSphere(center: any, radius: any): boolean;
+    setViewOffset(x: number, y: number, width: number, height: number): void;
 }
 // #endregion
 
