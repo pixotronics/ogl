@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="https://github.com/oframe/ogl/raw/master/examples/assets/ogl.png" alt="OGL" width="510" />
 </p>
@@ -23,7 +24,7 @@
 
 <br />
 
-⚠️ *Note: currently in alpha, so expect breaking changes.*
+⚠️ *Note: currently in alpha, so expect breaking changes. TS and webpack changes in this branch*
 
 [See the Examples!](https://oframe.github.io/ogl/examples)
 
@@ -76,7 +77,7 @@ Else if using a bundler with node modules, then import directly from the install
 ```js
 import { ... } from 'ogl';
 ```
-By default, the ES source modules are loaded (`src/index.mjs`).
+By default, the ES source modules are loaded (`src/ogl.js`).
 
 As another alternative, you could load from a CDN, using either the jsdelivr or unpkg services.
 ```js
