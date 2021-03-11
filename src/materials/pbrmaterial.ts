@@ -1,15 +1,21 @@
-// @ts-ignore
 import pbrvert from './shaders/pbr.vert';
-// @ts-ignore
 import pbrfrag from './shaders/pbr.frag';
 import {ProgramCache} from '../utils/programcache';
 import {Program, Texture, TextureLoader, Vec3, Vec4} from "../ogl";
+import {EncodingHelper} from "../utils/util";
 
 export type TUniforms = Record<string, { value?: any }>
 
 export class PBRMaterial {
     protected static readonly defaultVertex: string = pbrvert;
-    protected static readonly defaultFragment: string = pbrfrag;
+    protected static readonly defaultFragment: string = `
+precision highp float;
+precision highp int;
+#define inputEncoding ${EncodingHelper.Linear}
+#define outputEncoding ${EncodingHelper.RGBM16}
+${EncodingHelper.shaderChunk} 
+${pbrfrag}
+`
 
     private gl_: any;
     private program_: Program;
@@ -32,8 +38,8 @@ export class PBRMaterial {
             }));
         }
 
-        let pbrVert = shaders?.vert ?? pbrvert;
-        let pbrFrag = shaders?.frag ?? pbrfrag;
+        let pbrVert = shaders?.vert ?? PBRMaterial.defaultVertex;
+        let pbrFrag = shaders?.frag ?? PBRMaterial.defaultFragment;
 
         this.color_ = pbrparams?.baseColorFactor !== undefined ? new Vec4().copy(pbrparams.baseColorFactor) : new Vec4(1, 1, 1, 1);
         this.roughness = pbrparams?.roughness !== undefined ? pbrparams.roughness : 0;
@@ -64,6 +70,8 @@ export class PBRMaterial {
 
             uAlpha: { value: pbrparams?.alpha },
             uAlphaCutoff: { value: pbrparams?.alphaCutoff },
+
+            uTransparent: { value: pbrparams?.transparent },
 
             ...(uniforms??{}),
         }

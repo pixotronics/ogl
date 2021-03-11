@@ -41,6 +41,7 @@ export class Program {
         this.blendFunc = {};
         this.blendEquation = {};
         this.uniformLocations = new Map();
+        this.attributeLocations = new Map();
 
         // set default blendFunc if transparent flagged
         if (this.transparent && !this.blendFunc.src) {
@@ -99,7 +100,6 @@ export class Program {
         }
 
         // Get active attribute locations
-        this.attributeLocations = new Map();
         const locations = [];
         const numAttribs = gl.getProgramParameter(this.program, gl.ACTIVE_ATTRIBUTES);
         for (let aIndex = 0; aIndex < numAttribs; aIndex++) {

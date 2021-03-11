@@ -111,6 +111,10 @@ export class RenderTarget {
         this.textures.forEach( (texture) => {
             texture.dispose();
         })
+        this.depthTexture && this.depthTexture.dispose();
+        this.depthBuffer && this.gl.deleteRenderbuffer(this.depthBuffer);
+        this.stencilBuffer && this.gl.deleteRenderbuffer(this.stencilBuffer);
+        this.depthStencilBuffer && this.gl.deleteRenderbuffer(this.depthStencilBuffer);
         this.gl.deleteFramebuffer(this.buffer);
     }
 }

@@ -1,5 +1,7 @@
-import {Mesh, Renderer, Transform, Vec3} from "../ogl";
-
+import {Mesh, PostFBO, ProgramOptions, Renderer, Transform, Vec3} from "../ogl";
+import encodingChunk from "../shaders/encoding_par.glsl"
+import toneMappingChunk from "../shaders/tonemapping_par.glsl"
+import {Pass} from "../../dist";
 
 export function getSnapshotData(renderer: Renderer, mimeType?: string): string {
     mimeType = mimeType ?? "image/png";
@@ -90,4 +92,25 @@ export function traverse(root: Transform, callBack: any, filter?: any) {
 
 export function traverseMeshes(root: Transform, callBack: any) {
     traverse(root, callBack, (group: Transform)=> {return (group as Mesh).geometry != null});
+}
+
+export const EncodingHelper = {
+    Linear: 0,
+    sRGB: 1,
+    RGBE: 2,
+    RGBM7: 3,
+    RGBM16: 4,
+    RGBD: 5,
+    Gamma: 6,
+    shaderChunk: encodingChunk
+};
+export const ToneMappingHelper = {
+    Linear: 0,
+    Reinhard: 1,
+    Cineon: 2,
+    ACESFilmic: 3,
+    uniforms: {
+        toneMappingExposure: {value: 1.}
+    },
+    shaderChunk: toneMappingChunk
 }

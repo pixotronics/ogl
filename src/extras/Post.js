@@ -5,6 +5,7 @@ import { Mesh } from '../core/Mesh.js';
 import { RenderTarget } from '../core/RenderTarget.js';
 import { Triangle } from './Triangle.js';
 
+// Note: Use CustomPost, not this.
 export class Post {
     constructor(
         gl,
@@ -18,7 +19,8 @@ export class Post {
             magFilter = gl.LINEAR,
             geometry = new Triangle(gl),
             targetOnly = null,
-        } = {}
+        } = {},
+        fbo = null,
     ) {
         this.gl = gl;
 
@@ -31,15 +33,15 @@ export class Post {
         this.uniform = { value: null };
         this.targetOnly = targetOnly;
 
-        const fbo = (this.fbo = {
-            read: null,
-            write: null,
+        this.fbo = fbo || {
+            read: undefined,
+            write: undefined,
             swap: () => {
-                let temp = fbo.read;
-                fbo.read = fbo.write;
-                fbo.write = temp;
+                let temp = this.fbo.read;
+                this.fbo.read = this.fbo.write;
+                this.fbo.write = temp;
             },
-        });
+        };
 
         this.resize({ width, height, dpr });
     }
@@ -63,6 +65,7 @@ export class Post {
     }
 
     resize({ width, height, dpr } = {}) {
+
         if (dpr) this.dpr = dpr;
         if (width) {
             this.width = width;
@@ -75,7 +78,17 @@ export class Post {
 
         this.options.width = width;
         this.options.height = height;
+        this.disposeFbo();
+        this.initFbo();
+    }
 
+    disposeFbo() {
+        this.fbo.read && this.fbo.read.dispose();
+        this.fbo.write && this.fbo.write.dispose();
+        this.fbo.read = undefined;
+        this.fbo.write = undefined;
+    }
+    initFbo() {
         this.fbo.read = new RenderTarget(this.gl, this.options);
         this.fbo.write = new RenderTarget(this.gl, this.options);
     }

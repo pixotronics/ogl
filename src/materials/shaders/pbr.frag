@@ -1,5 +1,3 @@
-precision highp float;
-precision highp int;
 uniform mat4 viewMatrix;
 uniform mat3 normalMatrix;
 uniform vec3 cameraPosition;
@@ -21,6 +19,7 @@ uniform float uEnvSpecular;
 uniform float uEnvMapIntensity;
 uniform float uAlpha;
 uniform float uAlphaCutoff;
+uniform bool uTransparent;
 varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vMPos;
@@ -144,9 +143,11 @@ void main() {
     vec3 emissive = SRGBtoLinear(texture2D(tEmissive, vUv)).rgb;
     color = emissive;
   #endif
-  // Convert to sRGB to display
-  gl_FragColor.rgb = linearToSRGB(color);
-  
   // Apply uAlpha uniform at the end to overwrite any specular additions on transparent surfaces
-  gl_FragColor.a = alpha * uAlpha;
+//  gl_FragColor.rgb = linearToSRGB(color);
+  if(uTransparent){
+    gl_FragColor = (vec4(color, alpha * uAlpha));
+  }else {
+    gl_FragColor = linearToOutputTexel(vec4(color * alpha * uAlpha, 1.));
+  }
 }

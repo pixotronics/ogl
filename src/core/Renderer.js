@@ -40,9 +40,11 @@ export class Renderer {
         this.id = ID++;
 
         // Attempt WebGL2 unless forced to 1, if not supported fallback to WebGL1
-        if (webgl === 2) this.gl = canvas.getContext('webgl2', attributes);
         this.isWebgl2 = !!this.gl;
         if (!this.gl) {
+            /**
+             * @type {OGLRenderingContext}
+             */
             this.gl = canvas.getContext('webgl', attributes) || canvas.getContext('experimental-webgl', attributes);
         }
         if (!this.gl) console.error('unable to create webgl context');
@@ -88,6 +90,8 @@ export class Renderer {
             this.getExtension('EXT_sRGB');
             this.getExtension('WEBGL_depth_texture');
             this.getExtension('WEBGL_draw_buffers');
+            this.getExtension('WEBGL_color_buffer_float');
+            this.getExtension('EXT_color_buffer_half_float');
         }
 
         // Create method aliases using extension (WebGL1) or native if available (WebGL2)
@@ -252,10 +256,15 @@ export class Renderer {
         }
     }
 
-    getRenderList({ scene, camera, frustumCull, sort, overrideProgram }) {
-        let renderList = [];
-        if (camera && frustumCull) camera.updateFrustum();
+    getRenderList({ scene, camera, frustumCull, sort }) {
+        let renderList = Array.isArray(scene) ? [...scene] : this.sceneToRenderList(scene, frustumCull, camera);
+        if (sort) renderList = this.sortRenderList(renderList, camera);
+        return renderList;
+    }
 
+    sceneToRenderList(scene, frustumCull, camera) {
+        if (camera && frustumCull) camera.updateFrustum();
+        let renderList = [];
         // Get visible
         scene.traverse((node) => {
             if (!node.visible) return true;
@@ -267,41 +276,40 @@ export class Renderer {
 
             renderList.push(node);
         });
-
-        if (sort) {
-            const opaque = [];
-            const transparent = []; // depthTest true
-            const ui = []; // depthTest false
-
-            renderList.forEach((node) => {
-                // Split into the 3 render groups
-                if (!node.program.transparent) {
-                    opaque.push(node);
-                } else if (node.program.depthTest) {
-                    transparent.push(node);
-                } else {
-                    ui.push(node);
-                }
-
-                node.zDepth = 0;
-
-                // Only calculate z-depth if renderOrder unset and depthTest is true
-                if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
-
-                // update z-depth
-                node.worldMatrix.getTranslation(tempVec3);
-                tempVec3.applyMatrix4(camera.projectionViewMatrix);
-                node.zDepth = tempVec3.z;
-            });
-
-            opaque.sort(this.sortOpaque);
-            transparent.sort(this.sortTransparent);
-            ui.sort(this.sortUI);
-
-            renderList = opaque.concat(transparent, ui);
-        }
-
         return renderList;
+    }
+
+    sortRenderList(renderList, camera, split = false) {
+        const opaque = [];
+        const transparent = []; // depthTest true
+        const ui = []; // depthTest false
+
+        renderList.forEach((node) => {
+            // Split into the 3 render groups
+            if (!node.program.transparent) {
+                opaque.push(node);
+            } else if (node.program.depthTest) {
+                transparent.push(node);
+            } else {
+                ui.push(node);
+            }
+
+            node.zDepth = 0;
+
+            // Only calculate z-depth if renderOrder unset and depthTest is true
+            if (node.renderOrder !== 0 || !node.program.depthTest || !camera) return;
+
+            // update z-depth
+            node.worldMatrix.getTranslation(tempVec3);
+            tempVec3.applyMatrix4(camera.projectionViewMatrix);
+            node.zDepth = tempVec3.z;
+        });
+
+        opaque.sort(this.sortOpaque);
+        transparent.sort(this.sortTransparent);
+        ui.sort(this.sortUI);
+
+        return split ? {opaque, transparent, ui} : opaque.concat(transparent, ui);
     }
 
     render({ scene, camera, target = null, update = true, sort = true, frustumCull = true, clear, overrideProgram }) {
@@ -329,7 +337,7 @@ export class Renderer {
         }
 
         // updates all scene graph matrices
-        if (update) scene.updateMatrixWorld();
+        if (update && !Array.isArray(scene)) scene.updateMatrixWorld();
 
         // Update camera separately, in case not in scene graph
         if (camera) camera.updateMatrixWorld();
@@ -338,7 +346,11 @@ export class Renderer {
         const renderList = this.getRenderList({ scene, camera, frustumCull, sort, overrideProgram });
 
         renderList.forEach((node) => {
-            node.draw({ camera, overrideProgram });
+            this.renderNode(node, camera, overrideProgram);
         });
+    }
+
+    renderNode(node, camera, overrideProgram) {
+        node.draw({camera, overrideProgram});
     }
 }

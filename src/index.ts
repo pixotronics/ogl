@@ -6,3 +6,5 @@ export * from "./utils/pbrhelper";
 export * from "./utils/util";
 export * from "./utils/eventdispatcher";
 export * from "./extras/CustomPost";
+export * from "./extras/RenderUtils";
+export * from "./hdr/HDRComposer";

@@ -1,4 +1,14 @@
-import {Camera, OGLRenderingContext, Post, PostOptions, Renderer, RenderTarget, Transform} from "../ogl";
+import {
+    Camera,
+    OGLRenderingContext,
+    Post,
+    PostFBO,
+    PostOptions, Program,
+    Renderer,
+    RenderTarget,
+    RenderTargetOptions,
+    Transform
+} from "../ogl";
 
 export class Pass {
     enabled: boolean;
@@ -12,6 +22,9 @@ export class Pass {
 
     render(renderer: Renderer, writeBuffer: RenderTarget|undefined, readBuffer: RenderTarget) {
         console.error('Not implemented');
+    }
+    renderWithFBO(renderer: Renderer, fbo: PostFBO){
+        fbo.read && this.render(renderer, fbo.write, fbo.read);
     }
     resize({ width, height, dpr }: Partial<{
         width: number;
@@ -39,8 +52,8 @@ export class RenderPass extends Pass {
 export class CustomPost extends Post {
     passes: Pass[] = [];
 
-    constructor(gl: OGLRenderingContext, options:Partial<PostOptions> = {}) {
-        super(gl, options);
+    constructor(gl: OGLRenderingContext, options:Partial<PostOptions> = {}, fbo?: PostFBO) {
+        super(gl, options, fbo);
     }
 
     addPass(pass: Pass) {
@@ -51,9 +64,13 @@ export class CustomPost extends Post {
     render({ target= undefined, update = true, sort = true, frustumCull = true }) {
         const enabledPasses = this.passes.filter((pass) => pass.enabled);
         enabledPasses.forEach((pass, i) => {
-            pass.render(this.gl.renderer, this.fbo.write, this.fbo.read);
+            this._renderPass(pass);
             pass.needsSwap && this.fbo.swap();
         });
+    }
+
+    protected _renderPass(pass: Pass) {
+        pass.renderWithFBO(this.gl.renderer, this.fbo);
     }
 
     resize({ width, height, dpr }: Partial<{
@@ -61,8 +78,6 @@ export class CustomPost extends Post {
         height: number;
         dpr: number;
     }>): void{
-        this.fbo.read && this.fbo.read.dispose();
-        this.fbo.write && this.fbo.write.dispose();
         super.resize({width: width, height: height, dpr: dpr});
         this.passes.forEach( (pass) => {
             pass.resize({width, height, dpr});

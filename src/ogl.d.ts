@@ -1569,13 +1569,16 @@ export class Renderer {
     sortTransparent(a: any, b: any): number;
     sortUI(a: any, b: any): number;
     getRenderList({ scene, camera, frustumCull, sort }: {
-        scene: Transform;
+        scene: Transform | Transform[];
         camera: Camera;
         frustumCull: boolean;
         sort: boolean;
     }): any[];
+    sceneToRenderList(scene: Transform, frustumCull: boolean, camera: Camera): Transform[];
+    sortRenderList(renderList: Transform[], camera: Camera, split?: false): Transform[];
+    sortRenderList(renderList: Transform[], camera: Camera, split: true): { opaque: Transform[], transparent: Transform[], ui: Transform[] };
     render({ scene, camera, target, update, sort, frustumCull, clear, }: Partial<{
-        scene: Transform;
+        scene: Transform | Transform[];
         camera: Camera;
         target: RenderTarget|null;
         update: boolean;
@@ -1610,6 +1613,7 @@ export class RenderTarget {
     width: number;
     height: number;
     depth: boolean;
+    stencil: boolean;
     buffer: WebGLFramebuffer;
     target: number;
     textures: Texture[];
@@ -1622,6 +1626,7 @@ export class RenderTarget {
         depth, stencil, depthTexture, // note - stencil breaks
         wrapS, wrapT, minFilter, magFilter, type, format, internalFormat, unpackAlignment, premultiplyAlpha
     }?: Partial<RenderTargetOptions>);
+    dispose(): void;
 }
 // #endregion
 
@@ -2134,11 +2139,11 @@ export class Post {
         value: any;
     };
     targetOnly: any;
-    fbo: any;
+    fbo: PostFBO;
     dpr: number;
     width: number;
     height: number;
-    constructor(gl: OGLRenderingContext, { width, height, dpr, wrapS, wrapT, minFilter, magFilter, geometry, targetOnly, }?: Partial<PostOptions>);
+    constructor(gl: OGLRenderingContext, { width, height, dpr, wrapS, wrapT, minFilter, magFilter, geometry, targetOnly, }?: Partial<PostOptions>, fbo?: PostFBO);
     resize({ width, height, dpr }?: Partial<{
         width: number;
         height: number;
@@ -2152,6 +2157,16 @@ export class Post {
         sort?: boolean;
         frustumCull?: boolean;
     }): void;
+
+    disposeFbo(): void;
+    initFbo(): void;
+
+
+}
+export interface PostFBO{
+    read?: RenderTarget;
+    write?: RenderTarget;
+    swap(): void;
 }
 // // #endregion
 
