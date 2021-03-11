@@ -76,11 +76,11 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   plugins: [
-    // new CopyPlugin({
-    //   patterns: [
-    //     { from: path.join(SRC_PATH, 'ogl.d.ts'), to: path.join(BUILD_PATH, 'ogl.d.ts') },
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.join(SRC_PATH, 'ogl.d.ts'), to: path.join(BUILD_PATH, 'ogl.d.ts') },
+      ],
+    }),
     // new DtsBundleWebpack({
     //
     //   // Required

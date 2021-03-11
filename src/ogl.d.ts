@@ -1577,14 +1577,15 @@ export class Renderer {
     sceneToRenderList(scene: Transform, frustumCull: boolean, camera: Camera): Transform[];
     sortRenderList(renderList: Transform[], camera: Camera, split?: false): Transform[];
     sortRenderList(renderList: Transform[], camera: Camera, split: true): { opaque: Transform[], transparent: Transform[], ui: Transform[] };
-    render({ scene, camera, target, update, sort, frustumCull, clear, }: Partial<{
+    render({ scene, camera, target, update, sort, frustumCull, clear, overrideProgram}: Partial<{
         scene: Transform | Transform[];
         camera: Camera;
-        target: RenderTarget|null;
+        target?: RenderTarget|null;
         update: boolean;
         sort: boolean;
         frustumCull: boolean;
         clear: boolean;
+        overrideProgram?: Program | null;
     }>): void;
 }
 // #endregion

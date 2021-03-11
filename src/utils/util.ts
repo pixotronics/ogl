@@ -1,7 +1,6 @@
-import {Mesh, PostFBO, ProgramOptions, Renderer, Transform, Vec3} from "../ogl";
+import {Mesh, Renderer, Transform, Vec3} from "../ogl";
 import encodingChunk from "../shaders/encoding_par.glsl"
 import toneMappingChunk from "../shaders/tonemapping_par.glsl"
-import {Pass} from "../../dist";
 
 export function getSnapshotData(renderer: Renderer, mimeType?: string): string {
     mimeType = mimeType ?? "image/png";
