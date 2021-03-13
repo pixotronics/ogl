@@ -1,7 +1,3 @@
-#ifndef saturate
-#define saturate (a) clamp( a, 0.0, 1.0 )
-#endif
-
 uniform float toneMappingExposure;
 
 // exposure only
@@ -15,7 +11,7 @@ vec3 LinearToneMapping( vec3 color ) {
 vec3 ReinhardToneMapping( vec3 color ) {
 
     color *= toneMappingExposure;
-    return saturate ( color / ( vec3( 1.0 ) + color ) );
+    return clamp ( color / ( vec3( 1.0 ) + color ), 0., 1.);
 
 }
 
@@ -67,7 +63,7 @@ vec3 ACESFilmicToneMapping( vec3 color ) {
     color = ACESOutputMat * color;
 
     // Clamp to [0, 1]
-    return saturate( color );
+    return clamp( color, 0., 1. );
 
 }
 
