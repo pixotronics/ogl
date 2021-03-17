@@ -8,14 +8,7 @@ export type TUniforms = Record<string, { value?: any }>
 
 export class PBRMaterial {
     protected static readonly defaultVertex: string = pbrvert;
-    protected static readonly defaultFragment: string = `
-precision highp float;
-precision highp int;
-#define inputEncoding ${EncodingHelper.Linear}
-#define outputEncoding ${EncodingHelper.RGBM16}
-${EncodingHelper.shaderChunk} 
-${pbrfrag}
-`
+    protected static readonly defaultFragment: string = `${pbrfrag}`
 
     private gl_: any;
     private program_: Program;
@@ -29,7 +22,17 @@ ${pbrfrag}
     private metalness_: number = 0;
     private envMapIntensity_: number = 1;
 
-    constructor(gl: any, pbrparams?: PBRMaterialParams, defines? : string, uniforms?: TUniforms, shaders?: {frag?: string, vert?: string}) {
+    makeFragmentShader(frag: string, hdr = true){
+        return `
+precision highp float;
+precision highp int;
+#define inputEncoding ${EncodingHelper.Linear}
+#define outputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
+${EncodingHelper.shaderChunk}
+${frag}
+`
+    }
+    constructor(gl: any, pbrparams?: PBRMaterialParams, defines? : string, uniforms?: TUniforms, shaders?: {frag?: string, vert?: string}, hdr=true) {
         this.gl_ = gl;
 
         if(!PBRMaterial.lutTextureMap.get(gl.canvas.id)) {
@@ -76,7 +79,7 @@ ${pbrfrag}
             ...(uniforms??{}),
         }
         defines = defines ? defines : ``;
-        this.program_ = this.createProgram_(defines, pbrVert, pbrFrag);
+        this.program_ = this.createProgram_(defines, pbrVert, pbrFrag, hdr);
     }
 
     get isPBRMaterial() {
@@ -189,9 +192,9 @@ ${pbrfrag}
 
     }
 
-    private createProgram_(defines: string, vertex?: string, fragment?: string) {
+    private createProgram_(defines: string, vertex?: string, fragment?: string, hdr:boolean = true) {
         vertex = vertex ?? PBRMaterial.defaultVertex
-        fragment = fragment ?? PBRMaterial.defaultFragment;
+        fragment = this.makeFragmentShader(fragment ?? PBRMaterial.defaultFragment, hdr);
 
         vertex = defines + vertex;
         fragment = defines + fragment;

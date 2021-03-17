@@ -56,11 +56,7 @@ module.exports = {
         test: /\.tsx?$/,
         use: {
           loader: 'ts-loader',
-          options: {
-            transpileOnly: false //todo; remove when errors in ogl fixed.
-          }
         },
-        // exclude: /node_modules/
       }
     ]
   },

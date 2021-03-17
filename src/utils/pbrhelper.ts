@@ -28,13 +28,13 @@ function updateUniforms_(material?: PBRMaterial) {
     }
 }
 
-export function assignPBRMaterials(gl: OGLRenderingContext, root: Transform, materialCtor?: (gl: OGLRenderingContext, p: PBRMaterialParams, defines: string)=>PBRMaterial) {
+export function assignPBRMaterials(gl: OGLRenderingContext, root: Transform, materialCtor?: (gl: OGLRenderingContext, p: PBRMaterialParams, defines: string)=>PBRMaterial, hdr = true) {
     root.traverse((node) => {
         if (node instanceof Mesh && node.program && !(node as any)?.material?.isDiamondMaterial && node.program.gltfMaterial) { //todo: isDiamondMaterial on node??
             let defines = `${node.geometry.attributes.uv ? `#define UV\n` : ``}`;
             let material = materialCtor ?
                 materialCtor(gl, getPBRParams(node.program.gltfMaterial), defines) :
-                new PBRMaterial(gl, getPBRParams(node.program.gltfMaterial), defines);
+                new PBRMaterial(gl, getPBRParams(node.program.gltfMaterial), defines, undefined, undefined, hdr);
             node.material = material;
             node.program = material.program;
 

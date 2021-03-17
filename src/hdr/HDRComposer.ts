@@ -116,13 +116,13 @@ export class HDRRenderPass extends Pass {
 export class HDRToneMapPass extends Pass {
     private toneMapProgram: Program;
     private gl: OGLRenderingContext;
-    constructor(gl: OGLRenderingContext) {
+    constructor(gl: OGLRenderingContext, hdr = true) {
         super();
         this.gl = gl;
         this.needsSwap = false;
         this.toneMapProgram = new Program(gl, {vertex: Utils.copyVertex, fragment: `
             precision highp float;
-            #define inputEncoding ${EncodingHelper.RGBM16}
+            #define inputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
             #define outputEncoding ${EncodingHelper.sRGB}
             #define tonemappingMode ${ToneMappingHelper.Linear}
             ${EncodingHelper.shaderChunk}
