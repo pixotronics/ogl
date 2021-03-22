@@ -1,0 +1,63 @@
+{
+    "name": "ogl",
+    "version": "0.1.72",
+    "description": "WebGL Library",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "ts:main": "dist/index.d.ts",
+    "sideEffects": false,
+    "directories": {
+        "example": "examples"
+    },
+    "scripts": {
+        "build": "webpack --config webpack.dev.js",
+        "watch": "webpack --config webpack.dev.js --watch",
+        "prepare": "npm run build",
+        "publish-git": "npm install && publish-to-git --force"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://gordonnl@github.com/oframe/ogl.git"
+    },
+    "keywords": [
+        "webgl",
+        "ogl"
+    ],
+    "author": {
+        "name": "Nathan Gordon",
+        "email": "gordonnl@gmail.com",
+        "url": "https://twitter.com/gordonnl"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/oframe/ogl/issues"
+    },
+    "devDependencies": {
+        "@rollup/plugin-typescript": "^8.2.0",
+        "copy-webpack-plugin": "^8.0.0",
+        "dts-bundle-webpack": "^1.0.2",
+        "publish-to-git": "^1.1.9",
+        "raw-loader": "^4.0.2",
+        "source-map-loader": "^2.0.1",
+        "ts-loader": "^8.0.17",
+        "typescript": "^4.2.3",
+        "webpack": "^5.24.4",
+        "webpack-cli": "^4.5.0",
+        "webpack-dev-server": "^3.11.2",
+        "webpack-merge": "^5.7.3"
+    },
+    "homepage": "https://github.com/oframe/ogl#readme",
+    "prettier": {
+        "arrowParens": "always",
+        "bracketSpacing": true,
+        "endOfLine": "lf",
+        "htmlWhitespaceSensitivity": "css",
+        "printWidth": 150,
+        "quoteProps": "as-needed",
+        "semi": true,
+        "singleQuote": true,
+        "tabWidth": 4,
+        "trailingComma": "es5",
+        "useTabs": false
+    }
+}
