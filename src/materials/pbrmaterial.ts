@@ -26,7 +26,7 @@ export class PBRMaterial {
         return `
 precision highp float;
 precision highp int;
-#define inputEncoding ${EncodingHelper.Linear}
+#define inputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
 #define outputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
 ${EncodingHelper.shaderChunk}
 ${frag}
