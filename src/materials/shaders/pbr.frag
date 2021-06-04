@@ -148,6 +148,7 @@ void main() {
   if(uTransparent){
     gl_FragColor = (vec4(color, alpha * uAlpha));
   }else {
-    gl_FragColor = linearToOutputTexel(vec4(color * alpha * uAlpha, 1.));
+//    gl_FragColor = linearToOutputTexel(vec4(color * alpha * uAlpha, 1.));
+    gl_FragColor = linearToOutputTexel(vec4(color * uAlpha, 1.));
   }
 }
