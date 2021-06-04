@@ -1,6 +1,6 @@
 {
     "name": "ogl",
-    "version": "0.1.72",
+    "version": "0.2.0",
     "description": "WebGL Library",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",

@@ -21,7 +21,7 @@ varying vec4 vMVPos;
 
 void main() {
     vec4 pos = vec4(position, 1);
-    vec3 nml = normal;
+    vec3 nml = normalMatrix * normal;
     vUv = uv;
     vNormal = normalize(nml);
     vec4 mPos = modelMatrix * pos;

@@ -42,7 +42,7 @@ vec3 linearToSRGB(vec3 color) {
   return pow(color, vec3(1.0 / 2.2));
 }
 vec3 getNormal() {
-  #ifdef NORMAL_MAP  
+  #ifdef NORMAL_MAP
     vec3 pos_dx = dFdx(vMPos.xyz);
     vec3 pos_dy = dFdy(vMPos.xyz);
     vec2 tex_dx = dFdx(vUv);
@@ -78,7 +78,7 @@ void getIBLContribution(inout vec3 diffuse, inout vec3 specular, float NdV, floa
   float level0 = floor(blend);
   float level1 = min(ENV_LODS, level0 + 1.0);
   blend -= level0;
-  
+
   // Sample the specular env map atlas depending on the roughness value
   vec2 uvSpec = cartesianToPolar(reflection);
   uvSpec.y /= 2.0;
@@ -92,7 +92,7 @@ void getIBLContribution(inout vec3 diffuse, inout vec3 specular, float NdV, floa
   vec3 specular1 = RGBMToLinear(texture2D(tEnvSpecular, uv1)).rgb;
   vec3 specularLight = mix(specular0, specular1, blend);
   diffuse = diffuseLight * diffuseColor;
-  
+
   // Bit of extra reflection for smooth materials
   float reflectivity = pow((1.0 - roughness), 2.0) * 0.05;
   specular = specularLight * (specularColor * brdf.x + brdf.y + reflectivity);
@@ -122,7 +122,7 @@ void main() {
   vec3 specularEnvR0 = specularColor;
   vec3 specularEnvR90 = vec3(clamp(max(max(specularColor.r, specularColor.g), specularColor.b) * 25.0, 0.0, 1.0));
   vec3 N = getNormal();
-  vec3 V = normalize(cameraPosition - vMPos);
+  vec3 V = normalize( - vMVPos.xyz);
   vec3 reflection = normalize(reflect(-V, N));
   float NdV = clamp(abs(dot(N, V)), 0.001, 1.0);
   // Shading based off IBL lighting
@@ -134,12 +134,12 @@ void main() {
   color += (diffuseIBL + specularIBL) * uEnvMapIntensity;
   // Add IBL spec to alpha for reflections on transparent surfaces (glass)
   alpha = max(alpha, max(max(specularIBL.r, specularIBL.g), specularIBL.b));
-  #ifdef OCC_MAP  
+  #ifdef OCC_MAP
     // TODO: figure out how to apply occlusion
     // color *= SRGBtoLinear(texture2D(tOcclusion, vUv)).rgb;
   #endif
   color += uEmissive;
-  #ifdef EMISSIVE_MAP  
+  #ifdef EMISSIVE_MAP
     vec3 emissive = SRGBtoLinear(texture2D(tEmissive, vUv)).rgb;
     color = emissive;
   #endif
