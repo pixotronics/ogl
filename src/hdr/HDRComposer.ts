@@ -124,14 +124,14 @@ export class HDRToneMapPass extends Pass {
             precision highp float;
             #define inputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
             #define outputEncoding ${EncodingHelper.sRGB}
-            #define tonemappingMode ${ToneMappingHelper.Linear}
+            #define tonemappingMode ${hdr?ToneMappingHelper.ACESFilmic:ToneMappingHelper.Linear}
             ${EncodingHelper.shaderChunk}
             ${ToneMappingHelper.shaderChunk}
             uniform sampler2D tMap;
             varying vec2 vUv;
             void main() {
                 vec4 color = inputTexelToLinear(texture2D(tMap, vUv));
-                color.rgb = toneMapColor(color.rgb);
+                color.rgb = toneMapColor(color.rgb*2.);
                 gl_FragColor = linearToOutputTexel(color);
             }
         `, uniforms: {
