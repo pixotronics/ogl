@@ -42,8 +42,8 @@ export function assignPBRMaterials(gl: OGLRenderingContext, root: Transform, mat
                 updateUniforms_(node.material);
             });
         }
-        if((node as any)?.material?.isDiamondMaterial){
-            (node as Mesh).program.transparent = true;
-        }
+        // if((node as any)?.material?.isDiamondMaterial){
+        //     (node as Mesh).program.transparent = true;
+        // }
     });
 }

@@ -100,7 +100,7 @@ void getIBLContribution(inout vec3 diffuse, inout vec3 specular, float NdV, floa
 }
 
 void main() {
-  vec4 baseColor = uBaseColorFactor;
+  vec4 baseColor = SRGBtoLinear(uBaseColorFactor);
   #ifdef COLOR_MAP
     baseColor *= SRGBtoLinear(texture2D(tBaseColor, vUv));
   #endif

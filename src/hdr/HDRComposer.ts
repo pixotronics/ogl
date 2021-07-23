@@ -44,8 +44,8 @@ export class HDRRenderPass extends Pass {
                 // gl_FragColor = linearToOutputTexel(vec4(opaque, 1.));
             }
         `, uniforms: {
-                tOpaque: {value: {texture: null}},
-                tTransparent: {value: {texture: null}}
+                tOpaque: {value: {texture: undefined}},
+                tTransparent: {value: {texture: undefined}}
             },
             depthTest: false,
             depthWrite: false
@@ -58,8 +58,8 @@ export class HDRRenderPass extends Pass {
                 gl_FragColor = vec4(0,0,0,0);
             }
         `, uniforms: {
-                tOpaque: {value: {texture: null}},
-                tTransparent: {value: {texture: null}}
+                tOpaque: {value: {texture: undefined}},
+                tTransparent: {value: {texture: undefined}}
             },
             depthTest: false,
             depthWrite: false
@@ -124,18 +124,19 @@ export class HDRToneMapPass extends Pass {
             precision highp float;
             #define inputEncoding ${hdr?EncodingHelper.RGBM16:EncodingHelper.Linear}
             #define outputEncoding ${EncodingHelper.sRGB}
-            #define tonemappingMode ${hdr?ToneMappingHelper.ACESFilmic:ToneMappingHelper.Linear}
+            #define tonemappingMode ${hdr?ToneMappingHelper.Linear:ToneMappingHelper.Linear}
             ${EncodingHelper.shaderChunk}
             ${ToneMappingHelper.shaderChunk}
             uniform sampler2D tMap;
             varying vec2 vUv;
             void main() {
                 vec4 color = inputTexelToLinear(texture2D(tMap, vUv));
-                color.rgb = toneMapColor(color.rgb*2.);
+                color.rgb = toneMapColor(color.rgb*1.);
                 gl_FragColor = linearToOutputTexel(color);
+                // gl_FragColor.a = color.a;
             }
         `, uniforms: {
-                tMap: {value: {texture: null}},
+                tMap: {value: {texture: undefined}},
                 ...ToneMappingHelper.uniforms //todo: uniform utils clone.
             },
                 depthTest: false,
@@ -147,6 +148,7 @@ export class HDRToneMapPass extends Pass {
     renderWithFBO(renderer: Renderer, fbo: HDRFrame){
         this.toneMapProgram.uniforms['tMap'].value = fbo.read?.texture;
         Utils.getInstance(renderer.gl).renderPass(renderer, this.toneMapProgram, this.renderToScreen ? undefined : fbo.write, true);
+        this.needsSwap = !this.renderToScreen;
     }
     resize({ width, height, dpr }: Partial<{
         width: number;
