@@ -2011,6 +2011,8 @@ export type OrbitOptions = {
 export class Orbit {
     target: Vec3;
     forcePosition(): void;
+    autoRotate: boolean;
+    autoRotateSpeed: number;
     constructor(
         object: Transform & {
             fov: number

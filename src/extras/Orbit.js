@@ -39,6 +39,8 @@ export function Orbit(
     this.target = target;
     this.rotateSpeed = rotateSpeed;
     this.panSpeed = panSpeed;
+    this.autoRotate = autoRotate;
+    this.autoRotateSpeed = autoRotateSpeed;
     // Catch attempts to disable - set to 1 so has no effect
     ease = ease || 1;
     inertia = inertia || 0;
@@ -62,8 +64,8 @@ export function Orbit(
     this.offset = offset;
 
     this.update = () => {
-        if (autoRotate) {
-            handleAutoRotate();
+        if (this.autoRotate) {
+            handleAutoRotate(this.autoRotateSpeed);
         }
 
         // apply delta
@@ -151,8 +153,8 @@ export function Orbit(
         sphericalDelta.radius /= dollyScale;
     }
 
-    function handleAutoRotate() {
-        const angle = ((2 * Math.PI) / 60 / 60) * autoRotateSpeed;
+    function handleAutoRotate(speed) {
+        const angle = ((2 * Math.PI) / 60 / 60) * speed;
         sphericalDelta.theta -= angle;
     }
 
