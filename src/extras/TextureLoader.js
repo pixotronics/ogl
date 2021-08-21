@@ -43,7 +43,10 @@ export class TextureLoader {
 
         // If src is string, determine which format from the extension
         if (typeof src === 'string') {
-            ext = src.split('.').pop().split('?')[0].toLowerCase();
+            if(src.startsWith('data:image/'))
+                ext = src.split(/[;,]/)[0].split('/').pop();
+            else
+                ext = src.split('.').pop().split('?')[0].toLowerCase();
         }
 
         // If src is object, use supported extensions and provided list to choose best option

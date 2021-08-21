@@ -37,7 +37,7 @@ ${frag}
 
         if(!PBRMaterial.lutTextureMap.get(gl.canvas.id)) {
             PBRMaterial.lutTextureMap.set(gl.canvas.id, TextureLoader.load(gl, {
-              src: 'https://assets.jewlr.com/j3d/lut.png',
+              src: 'data:image/webp;base64,UklGRiADAABXRUJQVlA4IBQDAABwHQCdASoAAQABPp1In02oJ6kkoRYIqLATiWdu3lGg5NzErIheYuzPIA/Eb2QWycSlklqbXmzrVkDcW6x3rf3oXwRYhkwkwUeuoOVzCw0wJKTD3y9c3jbCDrPZ92KcdZD2tMmayIky/v+gNHPEebAcKa7hCtlT/OCoVNEKXO/NJWtpPN9tgGu6lQGNozRJyKXFuf9Ntt807NHm00N+C85/+myWGpmwG6wOqZSlffDg3/9w55GK5NKLK+DLwrfdEe6aUhI4UDtd9TJ+DG4ko2P/Ez1CzkdaYlWSfBY9x+lg1mD4RuQWQw/M4tKO2pLNKgDJAr4AAP7w7QI/nDS3gGBf/yz//P7/sN5GumHxPq8H901vi2dG5xA0qhxYf6Q/uVnI6k6afZapH6ErrWBIbkqxs3lWHQRSc6bGkjfF+tH/OYtwqjlN/BvQZK/pyiAFecyTmUcaNdVK9j3NoK0CQJJ2iTNFtULdYxN6gIknGI4yPDYhfRKAx+c8jl/c4Q8H4HG2TuNPatQs0eRBZxohJLCdPiCszxYPufYPrGzBGVv9JjDTuSTaiXfxR6zUO41reKNedZiZOqZW9B7VYOBhVBowOudPF54mcc0Ojxek2DWeGOvpPZqwlbGTdy3xnVOxzB7RpN2ADD3OEQgM2wdDGamp8Ad9vcP7bCdC2ub8ef09ukVUqpmVXMKgXynwTqZoqzAAofl24V0V+d/ymMM/pPmQSp/MaSP4ypjJzyZz9SMsHBGHRTE9lG3NB72mwfeHRLujoQdEi2SlnvTp1dWfWvDm9ouXD40iEbHR3oHJBAcGySLgHIYBTXbBGCUyxyU8jvnQPw8sQSRUM24yxVUNSxTq3RXZPvqGhduFpQSwQf2gYarJ9j5pRvjbakvz8H5S53+0Rqrss17oqXtL5S429pHngWHdvKWDsrJR+Qges0AjbXs0W2FpUrpUnDB51neUitaum4mndjCM7Nr5fcXyrjBtjOYpdNzxcKgjmjXNh+KFVgN0p2aJ+7aJxpBJAA0tH8xUB3ppT6fnu9VQHAoi8EnJnOgAAA==',
             }));
         }
 
